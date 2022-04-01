@@ -49,10 +49,13 @@ public class AlertRabbit {
         }
     }
 
-    private static Properties getConfig() throws IOException {
+    private static Properties getConfig() {
         Properties config = new Properties();
-        InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties");
-        config.load(in);
+        try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
+            config.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return config;
     }
 
