@@ -18,10 +18,6 @@ public class Post {
         this.created = created;
     }
 
-    public Post(LocalDateTime created) {
-        this.created = created;
-    }
-
     public Post(String title, String link, String description, LocalDateTime created) {
         this.title = title;
         this.link = link;
