@@ -1,4 +1,4 @@
-create table if not exists grabber (
+create table if not exists posts (
     id serial primary key,
     name varchar(255),
     text text,
