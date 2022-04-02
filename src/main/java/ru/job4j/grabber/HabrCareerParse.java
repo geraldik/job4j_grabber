@@ -6,7 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import ru.job4j.grabber.utils.DateTimeParser;
-import ru.job4j.grabber.utils.HarbCareerDateTimeParser;
+import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class HabrCareerParse implements Parse {
     }
 
     public static void main(String[] args) {
-        var habrCareerParse = new HabrCareerParse(new HarbCareerDateTimeParser());
+        var habrCareerParse = new HabrCareerParse(new HabrCareerDateTimeParser());
         List<Post> posts = habrCareerParse.list(PAGE_LINK);
         posts.forEach(System.out::println);
     }
@@ -56,8 +56,8 @@ public class HabrCareerParse implements Parse {
     public List<Post> list(String link) {
         List<Post> posts = new ArrayList<>(150);
         for (int i = 1; i < 6; i++) {
-            link = String.format("%s%s%d", link, "?page=", i);
-            Connection connection = Jsoup.connect(link);
+            String page = String.format("%s%s%d", link, "?page=", i);
+            Connection connection = Jsoup.connect(page);
             Document document = null;
             try {
                 document = connection.get();
