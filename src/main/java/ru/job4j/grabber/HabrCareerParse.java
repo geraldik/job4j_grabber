@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HabrCareerParse {
+public class HabrCareerParse implements Parse {
 
     private static final String SOURCE_LINK = "https://career.habr.com";
 
@@ -26,6 +26,12 @@ public class HabrCareerParse {
 
     public static void main(String[] args) throws IOException {
         var habrCareerParse = new HabrCareerParse(new HarbCareerDateTimeParser());
+        List<Post> posts = new ArrayList<>(150);
+        for (int i = 1; i < 6; i++) {
+            String link = String.format("%s%s%d", PAGE_LINK, "?page=", i);
+            posts = habrCareerParse.list(link);
+        }
+        posts.forEach(System.out::println);
     }
 
     private static String retrieveDescription(String link) throws IOException {
@@ -33,7 +39,7 @@ public class HabrCareerParse {
         Document document = connection.get();
         Elements description = document.getElementsByClass("style-ugc");
         return description.text();
-        }
+    }
 
     private Post getPost(Element row) throws IOException {
         Element titleElement = row.select(".vacancy-card__title").first();
@@ -43,5 +49,21 @@ public class HabrCareerParse {
         String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
         return new Post(vacancyName, link, retrieveDescription(link),
                 dateTimeParser.parse(timeElement.attr("datetime")));
+    }
+
+    @Override
+    public List<Post> list(String link) throws IOException {
+        List<Post> posts = new ArrayList<>(25);
+        Connection connection = Jsoup.connect(link);
+        Document document = connection.get();
+        Elements rows = document.select(".vacancy-card__inner");
+        rows.forEach(row -> {
+            try {
+                posts.add(getPost(row));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return posts;
     }
 }
